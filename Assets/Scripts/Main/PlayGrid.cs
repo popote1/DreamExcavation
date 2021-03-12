@@ -1,4 +1,5 @@
 using Scripts.Helper;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ namespace Scripts.Main
             Cells = new Cell[Widht,Height];
             for (int x = 0; x < Widht; x++) {
                 for (int y = 0; y < Height; y++) {
-                    Cells[x,y] = new Cell(new Vector2Int(x,y),0 );
+                    Cells[x,y] = new Cell(new Vector2Int(x,y),0 , this);
                     Cells[x, y].CellDebug = Instantiate(CellDebug, new Vector3(x + 0.5f, 0, y + 0.5f), quaternion.identity);
                 }
             }
@@ -34,10 +35,9 @@ namespace Scripts.Main
         {
             if (ShowDebug)
             {
-                Debug.Log("trace la grille");
+               
                 for (int x = 0; x < 1+Widht; x++) {
                     Debug.DrawLine(new Vector3(x,0,0),new Vector3(x,0,Height),GridColor);
-                    Debug.Log("trace une logne de"+new Vector3(x,0,0)+"a"+new Vector3(x,0,Height));
                 }
                 for (int y = 0; y < Height+1; y++) {
                     Debug.DrawLine(new Vector3(0,0,y),new Vector3(Widht,0,y),GridColor);
@@ -46,10 +46,10 @@ namespace Scripts.Main
             
         }
 
-        public Vector2Int? GetCellByWorldPos(Vector3 worldPos) {
+        public Vector2Int GetCellByWorldPos(Vector3 worldPos) {
             Vector2Int value = new Vector2Int(Mathf.FloorToInt(worldPos.x/CellSize) ,Mathf.FloorToInt( worldPos.z/CellSize));
             if (CheckIsInGrid(value)) return value;
-            return null;
+            return new Vector2Int(-1,-1);
         }
 
         public bool CheckIsInGrid(Vector2Int pos) {
@@ -72,6 +72,20 @@ namespace Scripts.Main
         [ContextMenu("Calculate FlowField")]
         public void CalculateFlowField() {
             FlowFieldHelper.CalculatFlowField(this,originePos);
+        }
+
+        public List<Vector2Int> GetNeigbor(Vector2Int pos)
+        {
+            List<Vector2Int> neibors = new List<Vector2Int>();
+            if (CheckIsInGrid(pos+new Vector2Int(1,0))){neibors.Add(pos+new Vector2Int(1,0));}
+            if (CheckIsInGrid(pos+new Vector2Int(1,1))){neibors.Add(pos+new Vector2Int(1,1));}
+            if (CheckIsInGrid(pos+new Vector2Int(0,1))){neibors.Add(pos+new Vector2Int(0,1));}
+            if (CheckIsInGrid(pos+new Vector2Int(0,-1))){neibors.Add(pos+new Vector2Int(0,-1));}
+            if (CheckIsInGrid(pos+new Vector2Int(-1,-1))){neibors.Add(pos+new Vector2Int(-1,-1));}
+            if (CheckIsInGrid(pos+new Vector2Int(-1,0))){neibors.Add(pos+new Vector2Int(-1,0));}
+            if (CheckIsInGrid(pos+new Vector2Int(1,-1))){neibors.Add(pos+new Vector2Int(1,-1));}
+            if (CheckIsInGrid(pos+new Vector2Int(-1,1))){neibors.Add(pos+new Vector2Int(-1,1));}
+            return neibors;
         }
     }
 }

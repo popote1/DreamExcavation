@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -294,7 +294,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 659744461}
   m_LocalRotation: {x: 0.6973846, y: -0, z: -0, w: 0.7166972}
-  m_LocalPosition: {x: 0, y: 10.09, z: 0.72}
+  m_LocalPosition: {x: 13.85, y: 17.73, z: 9.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -458,10 +458,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b55fd8eb45ccbb4d915083520a8087d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Height: 6
-  Widht: 6
+  Height: 20
+  Widht: 30
   CellSize: 1
   Origin: {x: 0, y: 0, z: 0}
+  originePos: {x: 0, y: 0}
   ShowDebug: 1
   GridColor: {r: 0.2838149, g: 1, b: 0, a: 0.6156863}
   CellDebug: {fileID: 8204309671194179525, guid: 83e1b371d2f2a70499ccc8c4146f560e, type: 3}
@@ -494,3 +495,4 @@ MonoBehaviour:
   PrefabCursor: {fileID: 4816424544064408695, guid: 0c4616bab7955624d9923bd41a8ebb68, type: 3}
   Grid: {fileID: 1967673079}
   cursorSmoothFactor: 20
+  GridMoverBase: {fileID: 3066687831511862565, guid: 92460155746f28d47afa2a688f561542, type: 3}

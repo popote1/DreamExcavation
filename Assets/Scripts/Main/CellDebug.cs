@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Scripts.Main
@@ -8,7 +9,8 @@ namespace Scripts.Main
         public SpriteRenderer Cellscare;
         public Text value;
         public Text IndividualValue;
-        public GameObject Arrow;
+        private Vector3 oriantation;
+
 
         public void ChangeMoveIndidualValue(int newValue)
         {
@@ -19,6 +21,16 @@ namespace Scripts.Main
         public void ChangeMoveValue(int newValue)
         {
            value.text = newValue.ToString();
+        }
+
+        public void ChangeVectorOriantation(Vector3 value)
+        {
+            oriantation = value;
+        }
+
+        private void Update()
+        {
+            Debug.DrawLine(transform.position , transform.position+oriantation/2 , Color.red);
         }
     }
 }
