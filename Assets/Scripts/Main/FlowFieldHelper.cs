@@ -6,11 +6,49 @@ namespace Scripts.Helper
 {
     public class FlowFieldHelper
     {
+       
         public static void CalculatFlowField(PlayGrid grid , Vector2Int origin)
         {
-            List<Vector2Int> OpenList = new List<Vector2Int>();
-            List<Vector2Int> closeList= new List<Vector2Int>();
+            
+            
 
+            List<Vector2Int> OpenList = new List<Vector2Int>();
+            List<Vector2Int> temporalToAdd = new List<Vector2Int>();
+            foreach (Cell cell in grid.Cells) {
+                cell.SetMoveValue(int.MaxValue);
+            }
+            OpenList.Add(origin);
+            grid.GetCell(origin).SetMoveValue(0);
+            while (OpenList.Count > 0)
+            {
+                foreach (Vector2Int cell in OpenList) {
+                    foreach (Vector2Int neibors in grid.GetNeibors(cell)) {
+                        if ((neibors-cell).magnitude > 1) {
+                            if (grid.GetCell(neibors).MoveValue > grid.GetCell(cell).MoveValue + 14 + grid.GetCell(neibors).IndividualMoveValue) {
+                                grid.GetCell(neibors).SetMoveValue( grid.GetCell(cell).MoveValue + 14 + grid.GetCell(neibors).IndividualMoveValue);
+                                temporalToAdd.Add(neibors);
+                                Vector2Int oriantation = cell - neibors;
+                                grid.GetCell(neibors).SetFlowFieldVector(new Vector3(oriantation.x,0,oriantation.y));
+                            } 
+                        }
+                        else {
+                            if (grid.GetCell(neibors).MoveValue > grid.GetCell(cell).MoveValue + 10 + grid.GetCell(neibors).IndividualMoveValue) {
+                                grid.GetCell(neibors).SetMoveValue( grid.GetCell(cell).MoveValue + 10 + grid.GetCell(neibors).IndividualMoveValue);
+                                temporalToAdd.Add(neibors);
+                                Vector2Int oriantation = cell - neibors;
+                                grid.GetCell(neibors).SetFlowFieldVector(new Vector3(oriantation.x,0,oriantation.y));
+                            } 
+                        }
+                    }
+                }
+                OpenList.Clear();
+                OpenList.AddRange(temporalToAdd);
+                temporalToAdd.Clear();
+            }
+            
+            
+            
+            
            /* OpenList.Add(origin);
             do
             {

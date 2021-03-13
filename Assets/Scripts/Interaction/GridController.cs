@@ -1,4 +1,5 @@
 ﻿using System;
+using Scripts.Actors;
 using Scripts.Main;
 using Unity.Mathematics;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace Scripts.Interaction
         public GameObject PrefabCursor;
         public PlayGrid Grid;
         [Range(0, 50)] public float cursorSmoothFactor = 9f;
+        public MoveActor prefabCube;
         
         
         private Camera _camera;
@@ -26,14 +28,30 @@ namespace Scripts.Interaction
         {
             RaycastHit hit;
             if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out hit)) {
-                Vector2Int? selectedCellT = Grid.GetCellByWorldPos(hit.point);
+                Vector2Int selectedCellT = Grid.GetCellByWorldPos(hit.point);
                 Vector2Int selectedCell;
-                if (selectedCellT != null) {
-                    selectedCell = (Vector2Int) selectedCellT;
+                if (selectedCellT != new Vector2Int(-1,-1)) {
+                    selectedCell = selectedCellT;
                     _cursorPos = Grid.GetCellCenterWorldPosByCell(selectedCell);
                     if (Input.GetButtonDown("Fire1"))
                     {
-                        Grid.Cells[selectedCell.x,selectedCell.y].AddMoveValue();
+                        Grid.Cells[selectedCell.x,selectedCell.y].AddMoveValue(10);
+                    }
+                    if (Input.GetButtonDown("Fire2"))
+                    {
+                        Grid.Cells[selectedCell.x,selectedCell.y].AddMoveValue(100);
+                    }
+
+                    if (Input.GetButtonDown("Jump"))
+                    {
+                        Grid.originePos = selectedCell;
+                        Grid.CalculateFlowField();
+                    }
+
+                    if (Input.GetKey("a"))
+                    {
+                       MoveActor MA= Instantiate(prefabCube, hit.point+new Vector3(0,0.5f,0), quaternion.identity);
+                       MA.grid = Grid;
                     }
                 }
             }

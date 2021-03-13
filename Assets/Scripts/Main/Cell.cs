@@ -19,16 +19,22 @@ namespace Scripts.Main
             MoveValue = moveValue;
         }
 
-        public void AddMoveValue()
+        public void AddMoveValue(int value)
         {
-            IndividualMoveValue += 10;
+            IndividualMoveValue += value;
             CellDebug.ChangeMoveIndidualValue(IndividualMoveValue);
         }
 
-        public void calculatMoveValue(int addvalue)
+        public void SetMoveValue(int value)
         {
-            MoveValue = addvalue + IndividualMoveValue;
+            MoveValue = value;
             CellDebug.ChangeMoveValue(MoveValue);
+        }
+
+        public void SetFlowFieldVector(Vector3 vec)
+        {
+            FlowFieldOrientation = vec;
+            CellDebug.ChangeVector(FlowFieldOrientation);
         }
 
     }

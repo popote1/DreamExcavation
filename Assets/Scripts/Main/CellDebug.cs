@@ -8,7 +8,12 @@ namespace Scripts.Main
         public SpriteRenderer Cellscare;
         public Text value;
         public Text IndividualValue;
-        public GameObject Arrow;
+        public Vector3 flowFieldVecotr;
+
+        private void Update()
+        {
+            Debug.DrawLine(transform.position , transform.position+flowFieldVecotr/2, Color.red);
+        }
 
         public void ChangeMoveIndidualValue(int newValue)
         {
@@ -19,6 +24,11 @@ namespace Scripts.Main
         public void ChangeMoveValue(int newValue)
         {
            value.text = newValue.ToString();
+        }
+
+        public void ChangeVector(Vector3 vec)
+        {
+            flowFieldVecotr = vec;
         }
     }
 }
