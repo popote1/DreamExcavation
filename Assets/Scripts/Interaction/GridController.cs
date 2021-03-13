@@ -40,6 +40,7 @@ namespace Scripts.Interaction
                     if (Input.GetButtonDown("Fire2"))
                     {
                         Grid.Cells[selectedCell.x,selectedCell.y].AddMoveValue(100);
+                        Grid.GetCell(selectedCell).Iswall = true;
                     }
 
                     if (Input.GetButtonDown("Jump"))

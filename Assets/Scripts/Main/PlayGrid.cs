@@ -89,7 +89,16 @@ namespace Scripts.Main
             if(CheckIsInGrid(pos+new Vector2Int(0,-1)))neibors.Add(pos+new Vector2Int(0,-1));
             if(CheckIsInGrid(pos+new Vector2Int(1,-1)))neibors.Add(pos+new Vector2Int(1,-1));
             return neibors;
-        } 
+        }
+
+        public bool CheckCellIsWall(Vector2Int pos)
+        {
+            if (CheckIsInGrid(pos)) {
+                return GetCell(pos).Iswall;
+                
+            }
+            return true;
+        }
        IEnumerator CalculateFlowFieldCorutine()
         {
             List<Vector2Int> OpenList = new List<Vector2Int>();
@@ -104,7 +113,7 @@ namespace Scripts.Main
                 foreach (Vector2Int cell in OpenList) {
                     foreach (Vector2Int neibors in GetNeibors(cell)) {
                         if ((neibors-cell).magnitude > 1) {
-                            if (GetCell(neibors).MoveValue >GetCell(cell).MoveValue + 14 + GetCell(neibors).IndividualMoveValue) {
+                            if (GetCell(neibors).MoveValue >GetCell(cell).MoveValue + 14 + GetCell(neibors).IndividualMoveValue&&!CheckCellIsWall(new Vector2Int(cell.x,neibors.y))&&!CheckCellIsWall(new Vector2Int(neibors.x,cell.y))) {
                                GetCell(neibors).SetMoveValue( GetCell(cell).MoveValue + 14 +GetCell(neibors).IndividualMoveValue);
                                 temporalToAdd.Add(neibors);
                                 Vector2Int oriantation = cell - neibors;

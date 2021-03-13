@@ -12,6 +12,7 @@ namespace Scripts.Main
         public int IndividualMoveValue;
         public Vector3 FlowFieldOrientation;
         public CellDebug CellDebug;
+        public bool Iswall;
 
         public Cell(Vector2Int pos, int moveValue)
         {
