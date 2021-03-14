@@ -37,10 +37,11 @@ namespace Scripts.Interaction
                     {
                         Grid.Cells[selectedCell.x,selectedCell.y].AddMoveValue(10);
                     }
+
                     if (Input.GetButtonDown("Fire2"))
                     {
-                        Grid.Cells[selectedCell.x,selectedCell.y].AddMoveValue(100);
                         Grid.GetCell(selectedCell).Iswall = true;
+                        Grid.Cells[selectedCell.x,selectedCell.y].AddMoveValue(500);
                     }
 
                     if (Input.GetButtonDown("Jump"))

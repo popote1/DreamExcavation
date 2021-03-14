@@ -24,6 +24,7 @@ namespace Scripts.Main
         {
             IndividualMoveValue += value;
             CellDebug.ChangeMoveIndidualValue(IndividualMoveValue);
+            if (Iswall)CellDebug.ActivateCollider();
         }
 
         public void SetMoveValue(int value)
@@ -37,6 +38,7 @@ namespace Scripts.Main
             FlowFieldOrientation = vec;
             CellDebug.ChangeVector(FlowFieldOrientation);
         }
+        
 
     }
 }
