@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -18,6 +19,14 @@ public class TerrainGeneratorV2 : MonoBehaviour
     public Vector2Int MinGRoundPos;
     public Vector2Int MaxGRoundPos;
 
+    [Header("Rouds paramettres")] 
+    public List<Vector2Int> roudsStartPos;
+    [Range(0, 100)] public float ChanceDeDevier=25;
+    public GameObject PrefabPont;
+    public int LimiteBorders = 2;
+    private List<Vector2Int> _roudCells = new List<Vector2Int>();
+    
+    
     [Header("TreeGenerator")] 
     public bool TreeInUpdate;
     public GameObject prefhabeCell;
@@ -163,6 +172,48 @@ void Start()
             vert++;
         }
     }
+
+    [ContextMenu("Generate Rouds")]
+    public void GeneratRouds()
+    {
+        foreach (Vector2Int startPo in roudsStartPos)
+        {
+            int x = startPo.x;
+            int y = startPo.y;
+            while (y < height-1) {
+                if (Random.Range(0, 100) < ChanceDeDevier) {
+                    if (Random.Range(0, 100) < 50) {
+                        x++;
+                        if (x > width - LimiteBorders) x -= 2;
+                    }
+                    else {
+                        x--;
+                        if (x < LimiteBorders) x += 2;
+                    }
+                }
+                else {
+                    y++;
+                }
+
+
+                if (cells[x, y] != null) {
+                    _roudCells.Add(new Vector2Int(x, y));
+                }
+                else {
+                    cells[x, y] = Instantiate(prefhabeCell,
+                        new Vector3(x * cellSize, y * cellSize, 0.5f) + new Vector3(0.5f, 0.5f),
+                        quaternion.identity);
+                    Instantiate(PrefabPont, new Vector3(x+0.5f, y+0.5f, 0.5f), Quaternion.identity);
+                    _roudCells.Add(new Vector2Int(x, y));
+                }
+            }
+        }
+        foreach (Vector2Int cell in _roudCells) {
+            cells[cell.x,cell.y].GetComponent<SpriteRenderer>().color = Color.red;
+        }
+        
+    }
+    
     [ContextMenu("Generate Tree Map")]
     public void GeneratTreeMap()
     {
@@ -216,7 +267,7 @@ void Start()
         for (int i = 0, y = 0; y <= height-1; y++) {
             for (int x = 0; x <= width-1; x++) {
                 if (cells[x, y] != null) {
-                    if (cells[x, y].GetComponent<SpriteRenderer>().color == Color.black) {
+                    if (cells[x, y].GetComponent<SpriteRenderer>().color == Color.black&&!_roudCells.Contains(new Vector2Int(x,y))) {
                         GameObject gO = Instantiate(PrefabTree, cells[x, y].transform.position, Quaternion.identity);
                         gO.transform.localScale = gO.transform.localScale * Random.Range(0.7f, 1.1f);
                         Destroy(cells[x,y]);
