@@ -1,5 +1,5 @@
 ﻿using System;
-using Scripts.GridActor;
+using Scripts.Actors;
 using Scripts.Main;
 using Unity.Mathematics;
 using UnityEngine;
@@ -11,7 +11,7 @@ namespace Scripts.Interaction
         public GameObject PrefabCursor;
         public PlayGrid Grid;
         [Range(0, 50)] public float cursorSmoothFactor = 9f;
-        public GridMoverBase GridMoverBase;
+        public MoveActor prefabCube;
         
         
         private Camera _camera;
@@ -28,14 +28,20 @@ namespace Scripts.Interaction
         {
             RaycastHit hit;
             if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out hit)) {
-                Vector2Int? selectedCellT = Grid.GetCellByWorldPos(hit.point);
+                Vector2Int selectedCellT = Grid.GetCellByWorldPos(hit.point);
                 Vector2Int selectedCell;
-                if (selectedCellT != new Vector2(-1,-1)) {
-                    selectedCell = (Vector2Int) selectedCellT;
+                if (selectedCellT != new Vector2Int(-1,-1)) {
+                    selectedCell = selectedCellT;
                     _cursorPos = Grid.GetCellCenterWorldPosByCell(selectedCell);
                     if (Input.GetButtonDown("Fire1"))
                     {
-                        Grid.Cells[selectedCell.x,selectedCell.y].AddMoveValue();
+                        Grid.Cells[selectedCell.x,selectedCell.y].AddMoveValue(10);
+                    }
+
+                    if (Input.GetButtonDown("Fire2"))
+                    {
+                        Grid.GetCell(selectedCell).Iswall = true;
+                        Grid.Cells[selectedCell.x,selectedCell.y].AddMoveValue(500);
                     }
 
                     if (Input.GetButtonDown("Jump"))
@@ -44,10 +50,10 @@ namespace Scripts.Interaction
                         Grid.CalculateFlowField();
                     }
 
-                    if (Input.GetKeyDown("a"))
+                    if (Input.GetKey("a"))
                     {
-                        GridMoverBase gameO =Instantiate(GridMoverBase, hit.point + new Vector3(0, 0.5f, 0), Quaternion.identity);
-                        gameO.Grid = Grid;
+                       MoveActor MA= Instantiate(prefabCube, hit.point+new Vector3(0,0.5f,0), quaternion.identity);
+                       MA.grid = Grid;
                     }
                 }
             }

@@ -1,65 +1,88 @@
-﻿using System;
-using Scripts.Main;
+﻿using Scripts.Main;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Scripts.Helper
 {
     public class FlowFieldHelper
     {
-        public static void CalculatFlowField(PlayGrid grid, Vector2Int origin)
+       
+        public static void CalculatFlowField(PlayGrid grid , Vector2Int origin)
         {
-            foreach (Cell cell in grid.Cells)
-            {
+            
+            
 
-                cell.calculatMoveValue(Int32.MaxValue);
+            List<Vector2Int> OpenList = new List<Vector2Int>();
+            List<Vector2Int> temporalToAdd = new List<Vector2Int>();
+            foreach (Cell cell in grid.Cells) {
+                cell.SetMoveValue(int.MaxValue);
             }
-
-            grid.GetCell(origin).calculatMoveValue(0);
-            grid.GetCell(origin).CalculateFlowFieldValue();
-
-            foreach (Cell cell in grid.Cells)
+            OpenList.Add(origin);
+            grid.GetCell(origin).SetMoveValue(0);
+            while (OpenList.Count > 0)
             {
-                cell.CalculateFlowFieldVector();
+                foreach (Vector2Int cell in OpenList) {
+                    foreach (Vector2Int neibors in grid.GetNeibors(cell)) {
+                        if ((neibors-cell).magnitude > 1) {
+                            if (grid.GetCell(neibors).MoveValue > grid.GetCell(cell).MoveValue + 14 + grid.GetCell(neibors).IndividualMoveValue) {
+                                grid.GetCell(neibors).SetMoveValue( grid.GetCell(cell).MoveValue + 14 + grid.GetCell(neibors).IndividualMoveValue);
+                                temporalToAdd.Add(neibors);
+                                Vector2Int oriantation = cell - neibors;
+                                grid.GetCell(neibors).SetFlowFieldVector(new Vector3(oriantation.x,0,oriantation.y));
+                            } 
+                        }
+                        else {
+                            if (grid.GetCell(neibors).MoveValue > grid.GetCell(cell).MoveValue + 10 + grid.GetCell(neibors).IndividualMoveValue) {
+                                grid.GetCell(neibors).SetMoveValue( grid.GetCell(cell).MoveValue + 10 + grid.GetCell(neibors).IndividualMoveValue);
+                                temporalToAdd.Add(neibors);
+                                Vector2Int oriantation = cell - neibors;
+                                grid.GetCell(neibors).SetFlowFieldVector(new Vector3(oriantation.x,0,oriantation.y));
+                            } 
+                        }
+                    }
+                }
+                OpenList.Clear();
+                OpenList.AddRange(temporalToAdd);
+                temporalToAdd.Clear();
             }
-        
+            
+            
+            
+            
+           /* OpenList.Add(origin);
+            do
+            {
+                List<Vector2Int> temporalToRemouve = new List<Vector2Int>(); 
+                List<Vector2Int> temporalTAdd = new List<Vector2Int>(); 
+                foreach (Vector2Int pos in OpenList)
+                {
+                    Vector2Int testPos = pos + new Vector2Int(1, 0);
+                    if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(10); temporalTAdd.Add(testPos);
+                    testPos = pos + new Vector2Int(-1, 0);
+                    if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(10); temporalTAdd.Add(testPos);
+                    testPos = pos + new Vector2Int(0, 1);
+                    if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(10); temporalTAdd.Add(testPos);
+                    testPos = pos + new Vector2Int(0, -1);
+                    if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(10); temporalTAdd.Add(testPos);
+                    testPos = pos + new Vector2Int(1, 1);
+                    if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(14); temporalTAdd.Add(testPos);
+                    testPos = pos + new Vector2Int(-1, 1);
+                    if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(14); temporalTAdd.Add(testPos);
+                    testPos = pos + new Vector2Int(1, -1);
+                    if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(14); temporalTAdd.Add(testPos);
+                    testPos = pos + new Vector2Int(-1, -1);
+                    if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(14); temporalTAdd.Add(testPos);
+                    temporalToRemouve.Add(pos);
+                }
 
+                foreach (Vector2Int pos in temporalToRemouve) {
+                    closeList.Add(pos);
+                    OpenList.Remove(pos);
+                }
+                OpenList.AddRange(temporalTAdd);
+                
 
-        /* OpenList.Add(origin);
-         do
-         {
-             List<Vector2Int> temporalToRemouve = new List<Vector2Int>(); 
-             List<Vector2Int> temporalTAdd = new List<Vector2Int>(); 
-             foreach (Vector2Int pos in OpenList)
-             {
-                 Vector2Int testPos = pos + new Vector2Int(1, 0);
-                 if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(10); temporalTAdd.Add(testPos);
-                 testPos = pos + new Vector2Int(-1, 0);
-                 if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(10); temporalTAdd.Add(testPos);
-                 testPos = pos + new Vector2Int(0, 1);
-                 if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(10); temporalTAdd.Add(testPos);
-                 testPos = pos + new Vector2Int(0, -1);
-                 if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(10); temporalTAdd.Add(testPos);
-                 testPos = pos + new Vector2Int(1, 1);
-                 if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(14); temporalTAdd.Add(testPos);
-                 testPos = pos + new Vector2Int(-1, 1);
-                 if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(14); temporalTAdd.Add(testPos);
-                 testPos = pos + new Vector2Int(1, -1);
-                 if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(14); temporalTAdd.Add(testPos);
-                 testPos = pos + new Vector2Int(-1, -1);
-                 if (CheckCell(grid, testPos, closeList)) grid.GetCell(testPos).calculatMoveValue(14); temporalTAdd.Add(testPos);
-                 temporalToRemouve.Add(pos);
-             }
-
-             foreach (Vector2Int pos in temporalToRemouve) {
-                 closeList.Add(pos);
-                 OpenList.Remove(pos);
-             }
-             OpenList.AddRange(temporalTAdd);
-             
-
-         } while (OpenList.Count>0);*/
+            } while (OpenList.Count>0);*/
         }
 
         public static bool  CheckCell(PlayGrid grid,Vector2Int pos ,List<Vector2Int> closeList)
@@ -67,10 +90,7 @@ namespace Scripts.Helper
             if (grid.CheckIsInGrid(pos) && !closeList.Contains(pos)) return true;
             return false;
         }
-
         
-
-
         //Code volé
         
        /* void IntegrationField::calculateIntegrationField(unsigned targetX, unsigned targetY)

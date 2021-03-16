@@ -1,3 +1,4 @@
+using System.Collections;
 using Scripts.Helper;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -71,7 +72,70 @@ namespace Scripts.Main
 
         [ContextMenu("Calculate FlowField")]
         public void CalculateFlowField() {
-            FlowFieldHelper.CalculatFlowField(this,originePos);
+           // FlowFieldHelper.CalculatFlowField(this,originePos);
+           StartCoroutine(CalculateFlowFieldCorutine());
+        }
+
+        public List<Vector2Int> GetNeibors(Vector2Int pos)
+        {
+            List<Vector2Int> neibors = new List<Vector2Int>();
+            if(CheckIsInGrid(pos+new Vector2Int(1,0)))neibors.Add(pos+new Vector2Int(1,0));
+            if(CheckIsInGrid(pos+new Vector2Int(1,1)))neibors.Add(pos+new Vector2Int(1,1));
+            if(CheckIsInGrid(pos+new Vector2Int(0,1)))neibors.Add(pos+new Vector2Int(0,1));
+            if(CheckIsInGrid(pos+new Vector2Int(-1,1)))neibors.Add(pos+new Vector2Int(-1,1));
+            if(CheckIsInGrid(pos+new Vector2Int(-1,0)))neibors.Add(pos+new Vector2Int(-1,0));
+            if(CheckIsInGrid(pos+new Vector2Int(-1,-1)))neibors.Add(pos+new Vector2Int(-1,-1));
+            if(CheckIsInGrid(pos+new Vector2Int(0,-1)))neibors.Add(pos+new Vector2Int(0,-1));
+            if(CheckIsInGrid(pos+new Vector2Int(1,-1)))neibors.Add(pos+new Vector2Int(1,-1));
+            return neibors;
+        }
+
+        public bool CheckCellIsWall(Vector2Int pos)
+        {
+            if (CheckIsInGrid(pos)) {
+                return GetCell(pos).Iswall;
+                
+            }
+            return true;
+        }
+       IEnumerator CalculateFlowFieldCorutine()
+        {
+            List<Vector2Int> OpenList = new List<Vector2Int>();
+            List<Vector2Int> temporalToAdd = new List<Vector2Int>();
+            foreach (Cell cell in Cells) {
+                cell.SetMoveValue(int.MaxValue);
+            }
+            OpenList.Add(originePos);
+            GetCell(originePos).SetMoveValue(0);
+            while (OpenList.Count > 0)
+            {
+                foreach (Vector2Int cell in OpenList) {
+                    foreach (Vector2Int neibors in GetNeibors(cell)) {
+                        if ((neibors-cell).magnitude > 1) {
+                            if (GetCell(neibors).MoveValue >GetCell(cell).MoveValue + 14 + GetCell(neibors).IndividualMoveValue&&!CheckCellIsWall(new Vector2Int(cell.x,neibors.y))&&!CheckCellIsWall(new Vector2Int(neibors.x,cell.y))) {
+                               GetCell(neibors).SetMoveValue( GetCell(cell).MoveValue + 14 +GetCell(neibors).IndividualMoveValue);
+                                temporalToAdd.Add(neibors);
+                                Vector2Int oriantation = cell - neibors;
+                                GetCell(neibors).SetFlowFieldVector(new Vector3(oriantation.x,0,oriantation.y));
+                            } 
+                        }
+                        else {
+                            if (GetCell(neibors).MoveValue > GetCell(cell).MoveValue + 10 + GetCell(neibors).IndividualMoveValue) {
+                                GetCell(neibors).SetMoveValue( GetCell(cell).MoveValue + 10 + GetCell(neibors).IndividualMoveValue);
+                                temporalToAdd.Add(neibors);
+                                Vector2Int oriantation = cell - neibors;
+                                GetCell(neibors).SetFlowFieldVector(new Vector3(oriantation.x,0,oriantation.y));
+                            } 
+                        }
+                    }
+                    
+                }
+                OpenList.Clear();
+                OpenList.AddRange(temporalToAdd);
+                temporalToAdd.Clear();
+                yield return new WaitForSeconds(0.01f);
+            }
+            yield return null;
         }
 
         public List<Vector2Int> GetNeigbor(Vector2Int pos)

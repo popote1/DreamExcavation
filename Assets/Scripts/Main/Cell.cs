@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -13,64 +12,33 @@ namespace Scripts.Main
         public int IndividualMoveValue;
         public Vector3 FlowFieldOrientation;
         public CellDebug CellDebug;
-        public PlayGrid Grid;
+        public bool Iswall;
 
-        public Cell(Vector2Int pos, int moveValue , PlayGrid gird)
+        public Cell(Vector2Int pos, int moveValue)
         {
             Position = pos;
             MoveValue = moveValue;
-            Grid = gird;
         }
 
-        public void AddMoveValue()
+        public void AddMoveValue(int value)
         {
-            IndividualMoveValue += 10;
+            IndividualMoveValue += value;
             CellDebug.ChangeMoveIndidualValue(IndividualMoveValue);
+            if (Iswall)CellDebug.ActivateCollider();
         }
 
-        public void calculatMoveValue(int addvalue)
+        public void SetMoveValue(int value)
         {
-            MoveValue = addvalue;
+            MoveValue = value;
             CellDebug.ChangeMoveValue(MoveValue);
         }
 
-        public void SetFolwFild(Vector3 value)
+        public void SetFlowFieldVector(Vector3 vec)
         {
-            FlowFieldOrientation = value;
-            CellDebug.ChangeVectorOriantation(value);
+            FlowFieldOrientation = vec;
+            CellDebug.ChangeVector(FlowFieldOrientation);
         }
+        
 
-        public void CalculateFlowFieldValue()
-        {
-            Debug.Log("Il y a " + Grid.GetNeigbor(Position).Count + " de case voisine");
-            foreach (Vector2Int cell in Grid.GetNeigbor(Position) )
-            {
-                if ((Grid.GetCell(cell).Position-Position).magnitude > 1) {
-                    if (Grid.GetCell(cell).MoveValue > MoveValue + 14+ Grid.GetCell(cell).IndividualMoveValue) {
-                        Grid.GetCell(cell).calculatMoveValue( MoveValue + 14 + Grid.GetCell(cell).IndividualMoveValue);
-                        Grid.GetCell(cell).CalculateFlowFieldValue();
-                    }
-                }
-                else {
-                    if (Grid.GetCell(cell).MoveValue > MoveValue + 10+ Grid.GetCell(cell).IndividualMoveValue) {
-                        Grid.GetCell(cell).calculatMoveValue( MoveValue + 10 + Grid.GetCell(cell).IndividualMoveValue); 
-                        Grid.GetCell(cell).CalculateFlowFieldValue();
-                    } 
-                }
-            }
-        }
-
-        public void CalculateFlowFieldVector()
-        {
-            if (MoveValue != 0)
-            {
-                List<Cell> neibors = new List<Cell>();
-                foreach (Vector2Int cell in Grid.GetNeigbor(Position)) neibors.Add(Grid.GetCell(cell));
-
-                Vector2Int pos = neibors.OrderBy(cell => cell.MoveValue).First().Position;
-                Vector2 oriantation = pos - Position;
-                SetFolwFild(new Vector3(oriantation.x, 0, oriantation.y));
-            }
-        }
     }
 }
