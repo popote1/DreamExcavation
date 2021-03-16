@@ -13,11 +13,13 @@ namespace Scripts.Main
         public Vector3 FlowFieldOrientation;
         public CellDebug CellDebug;
         public bool Iswall;
+        public PlayGrid Grid;
 
-        public Cell(Vector2Int pos, int moveValue)
+        public Cell(Vector2Int pos, int moveValue , PlayGrid grid)
         {
             Position = pos;
             MoveValue = moveValue;
+            Grid = grid;
         }
 
         public void AddMoveValue(int value)
