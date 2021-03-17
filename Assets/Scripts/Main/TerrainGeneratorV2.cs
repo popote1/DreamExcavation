@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using Scripts.Main;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -18,6 +19,7 @@ public class TerrainGeneratorV2 : MonoBehaviour
     public Gradient Gradient;
     public Vector2Int MinGRoundPos;
     public Vector2Int MaxGRoundPos;
+    public PlayGridV2 playgrid;
 
     [Header("Rouds paramettres")] 
     public List<Vector2Int> roudsStartPos;
@@ -157,25 +159,33 @@ void Start()
         cells = new GameObject[width, height];
         int vert = 0;
         int tris = 0;
+        bool[,] waterMap = new bool[width, height];
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (_vertices[vert + 0].z ==0 && _vertices[vert + 1].z == 0 && _vertices[vert + width + 1].z == 0&& _vertices[vert + width + 2].z == 0)
                 {
                     cells[x, y] = Instantiate(prefhabeCell,
-                        new Vector3(x * cellSize, y * cellSize, _vertices[vert + 1].z - 0.5f) + new Vector3(0.5f, 0.5f),
+                        new Vector3(x * cellSize, y * cellSize, _vertices[vert + 1].z - 0.5f) + new Vector3(0.5f, 0.5f), 
                         quaternion.identity);
+                    waterMap[x, y] = false;
+                }
+                else
+                {
+                    waterMap[x, y] = true;
                 }
                 vert++;
                 tris += 6;
             }
             vert++;
         }
+        playgrid.InjectTerraindata(waterMap);
     }
 
     [ContextMenu("Generate Rouds")]
     public void GeneratRouds()
     {
+        bool[,] RoadMap = new bool[width, height];
         foreach (Vector2Int startPo in roudsStartPos)
         {
             int x = startPo.x;
@@ -210,8 +220,9 @@ void Start()
         }
         foreach (Vector2Int cell in _roudCells) {
             cells[cell.x,cell.y].GetComponent<SpriteRenderer>().color = Color.red;
+            RoadMap[cell.x, cell.y] = true;
         }
-        
+        playgrid.InjectRoadMap(RoadMap);
     }
     
     [ContextMenu("Generate Tree Map")]
@@ -263,6 +274,7 @@ void Start()
     [ContextMenu("spawn Tree")]
     public void SpawnTree()
     {
+        bool[,] TreeMap = new bool[width, height];
         TreeInUpdate = false;
         for (int i = 0, y = 0; y <= height-1; y++) {
             for (int x = 0; x <= width-1; x++) {
@@ -271,6 +283,7 @@ void Start()
                         GameObject gO = Instantiate(PrefabTree, cells[x, y].transform.position, Quaternion.identity);
                         gO.transform.localScale = gO.transform.localScale * Random.Range(0.7f, 1.1f);
                         Destroy(cells[x,y]);
+                        TreeMap[x, y] = true;
                     }
                     else {
                         Destroy(cells[x,y]);
@@ -278,5 +291,6 @@ void Start()
                 }
             }
         }
+        playgrid.InjectTreMap(TreeMap);
     }
 }
