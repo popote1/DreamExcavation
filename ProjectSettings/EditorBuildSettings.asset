@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/ExperimentalRoom.unity
-    guid: 2bef98644631c2d4592736bb00f2e752
+    path: Assets/Scenes/TerrainGeneratorV2.unity
+    guid: 8e5dcc359642a6a409ec6bac8b8a8dc3
   m_configObjects: {}

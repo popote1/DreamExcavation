@@ -76,7 +76,7 @@ void Start()
     // Update is called once per frame
     
     [ContextMenu("CreateMesh")]
-    void MakeNewMesh()
+    public void MakeNewMesh()
     {
         GenerateMesh();
         UpdateMesh();

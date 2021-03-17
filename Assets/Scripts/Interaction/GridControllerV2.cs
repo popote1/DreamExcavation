@@ -13,7 +13,7 @@ namespace Scripts.Interaction
         [Range(0, 50)] public float cursorSmoothFactor = 9f;
         public MoveActorV2 prefabCube;
         public inputState InputState;
-        
+        public bool IsOnUI;
         
         private Camera _camera;
         private Vector3 _cursorPos = Vector3.zero;
@@ -38,7 +38,7 @@ namespace Scripts.Interaction
                 if (selectedCellT != new Vector2Int(-1,-1)) {
                     selectedCell = selectedCellT;
                     _cursorPos = Grid.GetCellCenterWorldPosByCell(selectedCell);
-                    if (Input.GetButtonDown("Fire1"))
+                    if (Input.GetButton("Fire1")&&!IsOnUI)
                     {
                         //Grid.Cells[selectedCell.x,selectedCell.y].AddMoveValue(10);
                         if (InputState == inputState.Actor)
@@ -89,6 +89,17 @@ namespace Scripts.Interaction
         public void SetInputStateOnDestination()
         {
             InputState = inputState.Destination;
+        }
+
+        public void OnUIEnter()
+        {
+            IsOnUI = true;
+            
+        }
+
+        public void OnUIExit()
+        {
+            IsOnUI = false;
         }
     }
 }
