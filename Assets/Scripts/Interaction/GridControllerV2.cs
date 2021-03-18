@@ -1,28 +1,55 @@
 ﻿using System;
+using System.Collections.Generic;
 using Scripts.Actors;
 using Scripts.Main;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Scripts.Interaction
 {
-    public class GridControllerV2 :MonoBehaviour
+    public class GridControllerV2 : MonoBehaviour
     {
         public GameObject PrefabCursor;
         public PlayGridV2 Grid;
         [Range(0, 50)] public float cursorSmoothFactor = 9f;
         public MoveActorV2 prefabCube;
-        public inputState InputState;
+        public GameObject PrefabTower;
+        private inputState _inputState;
+
+        public inputState InputState
+        {
+            get => _inputState;
+            set
+            {
+                if (_inputState == inputState.building)
+                {
+                    foreach (Vector2Int vec in _preselectedCell) Grid.GetCell(vec).BuildingCell.SetActive(false);
+                    _preselectedCell.Clear();
+                }
+
+                _inputState = value;
+            }
+        }
+
         public bool IsOnUI;
-        
+        public Text FPSCounter;
+        public Text EntityCounter;
+
         private Camera _camera;
         private Vector3 _cursorPos = Vector3.zero;
         private Transform _cursor;
+        private int _entityCount;
+        private List<Vector2Int> _preselectedCell = new List<Vector2Int>();
 
         public enum inputState
         {
-            none,Actor, Destination
+            none,
+            Actor,
+            Destination,
+            building
         }
+
         private void Awake()
         {
             _camera = Camera.main;
@@ -32,19 +59,24 @@ namespace Scripts.Interaction
         private void Update()
         {
             RaycastHit hit;
-            if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out hit)) {
+            if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out hit))
+            {
                 Vector2Int selectedCellT = Grid.GetCellByWorldPos(hit.point);
                 Vector2Int selectedCell;
-                if (selectedCellT != new Vector2Int(-1,-1)) {
+                if (selectedCellT != new Vector2Int(-1, -1))
+                {
                     selectedCell = selectedCellT;
                     _cursorPos = Grid.GetCellCenterWorldPosByCell(selectedCell);
-                    if (Input.GetButton("Fire1")&&!IsOnUI)
+                    if (Input.GetButton("Fire1") && !IsOnUI)
                     {
                         //Grid.Cells[selectedCell.x,selectedCell.y].AddMoveValue(10);
                         if (InputState == inputState.Actor)
                         {
-                            MoveActorV2 MA= Instantiate(prefabCube, hit.point+new Vector3(0,0.5f,0), quaternion.identity);
+                            MoveActorV2 MA = Instantiate(prefabCube, hit.point + new Vector3(0, 0.5f, 0),
+                                quaternion.identity);
                             MA.grid = Grid;
+                            _entityCount++;
+                            EntityCounter.text = "Entity: " + _entityCount;
                         }
 
                         if (InputState == inputState.Destination)
@@ -54,6 +86,38 @@ namespace Scripts.Interaction
                             InputState = inputState.none;
                         }
                     }
+
+                    if (InputState == inputState.building)
+                    {
+                        List<Vector2Int> selected=GetBuildingVec2by2(selectedCell);
+                        /*if (Grid.GetCell(selectedCell).BuildingCell != null &&
+                            Grid.GetCell(selectedCell).IndividualMoveValue <= 20)
+                        {
+                            if (!_preselectedCell.Contains(selectedCell))
+                            {
+                                _preselectedCell.Add(selectedCell);
+                                Grid.GetCell(selectedCell).BuildingCell.SetActive(true);
+                            }
+                        }*/
+
+                        List<Vector2Int> tepo = new List<Vector2Int>();
+                        foreach (Vector2Int cell in _preselectedCell)
+                        {
+                            if (!selected.Contains(cell))
+                            {
+                                Grid.GetCell(cell).BuildingCell.SetActive(false);
+                                tepo.Add(cell);
+                            }
+                        }
+
+                        foreach (Vector2Int vec in tepo) _preselectedCell.Remove(vec);
+                        if (Input.GetButtonUp("Fire1")&&selected.Count==4)
+                        {
+                            buid(selected);
+                            InputState = inputState.none;
+                        }
+                    }
+
 /*
                     if (Input.GetButtonDown("Fire2"))
                     {
@@ -78,6 +142,8 @@ namespace Scripts.Interaction
                   */
                 }
             }
+
+            FPSCounter.text = "FPS: " + 1f / Time.deltaTime;
             _cursor.position = Vector3.Lerp(_cursor.position, _cursorPos, cursorSmoothFactor * Time.deltaTime);
         }
 
@@ -91,15 +157,62 @@ namespace Scripts.Interaction
             InputState = inputState.Destination;
         }
 
+        public void SetInputStateOnNone()
+        {
+            InputState = inputState.none;
+        }
+
+        public void SetInputStatOnBuilding()
+        {
+            InputState = inputState.building;
+        }
+
         public void OnUIEnter()
         {
             IsOnUI = true;
-            
+
         }
 
         public void OnUIExit()
         {
             IsOnUI = false;
+        }
+
+        private List<Vector2Int> GetBuildingVec2by2(Vector2Int origin)
+        {
+            List<Vector2Int> cells = new List<Vector2Int>();
+            Vector2Int cell = origin;
+            if (Grid.CheckIsInGrid(cell)) if(OperateBuildingCell(cell))cells.Add(cell);
+            cell += Vector2Int.left;
+            if (Grid.CheckIsInGrid(cell)) if(OperateBuildingCell(cell))cells.Add(cell);
+            cell += Vector2Int.up;
+            if (Grid.CheckIsInGrid(cell)) if(OperateBuildingCell(cell))cells.Add(cell);
+            cell += Vector2Int.right;
+            if (Grid.CheckIsInGrid(cell)) if(OperateBuildingCell(cell))cells.Add(cell);
+            return cells;
+        }
+
+        private bool OperateBuildingCell(Vector2Int cell) {
+            if (Grid.GetCell(cell).BuildingCell != null && Grid.GetCell(cell).IndividualMoveValue <= 20) {
+                if (!_preselectedCell.Contains(cell)) {
+                    _preselectedCell.Add(cell);
+                    Grid.GetCell(cell).BuildingCell.SetActive(true);
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private void buid(List<Vector2Int> buildingCells)
+        {
+            Vector3 pos =new Vector3();
+            foreach (Vector2Int cell in buildingCells)
+            {
+                pos += Grid.GetCellCenterWorldPosByCell(cell);
+                Grid.GetCell(cell).IndividualMoveValue = 100;
+            }
+            pos =pos/4;
+            Instantiate(PrefabTower, pos, Quaternion.identity);
         }
     }
 }

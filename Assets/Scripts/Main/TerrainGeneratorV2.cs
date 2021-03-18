@@ -49,6 +49,10 @@ public class TerrainGeneratorV2 : MonoBehaviour
     public bool IsUsingTreeMidifier2;
     [Range(0,1)]public float TreeModifier2StartStrenght = 0.5f;
     [Range(0,100)]public float TreeModifier2StartNewNoise = 50f;
+    [Header("TreeModifier3")] 
+    public bool IsUsingTreeModifier3;
+    public Vector2Int TreeModifier3Min;
+    public Vector2Int TreeModifier3Max;
     
     
     public void Update()
@@ -237,20 +241,24 @@ void Start()
 
                     float cellValue = Mathf.PerlinNoise(TreeOffSet.x + x * TreeZome, TreeOffSet.y + y * TreeZome);
 
-                    if (IsUsingTreeMidifier)
-                    {
+                    if (IsUsingTreeMidifier) {
                         float cellValue2 = Mathf.PerlinNoise(TreeModifier1OffSet.x + x * TreeModifier1Zome, TreeModifier1OffSet.y + y * TreeModifier1Zome);
                         float a = TreeModifier1StartNewNoise * height / 100;
                         float c = (y - a)*TreeModifier1StartStrenght / (height - a);
                         cellValue = Mathf.Lerp(cellValue, cellValue2,  c);
                     }
 
-                    if (IsUsingTreeMidifier2)
-                    {
+                    if (IsUsingTreeMidifier2) {
                         float a = TreeModifier2StartNewNoise * height / 100;
                         float c = (y - a) *TreeModifier2StartStrenght/ (height - a);
                         cellValue = Mathf.Lerp(cellValue, 0,  c);
-                        
+                    }
+
+                    if (IsUsingTreeModifier3) {
+                        if (x > TreeModifier3Min.x && x < TreeModifier3Max.x && y > TreeModifier3Min.y&& y < TreeModifier3Max.y)
+                        {
+                            cellValue = 0;
+                        }
                     }
 
 
@@ -280,7 +288,7 @@ void Start()
             for (int x = 0; x <= width-1; x++) {
                 if (cells[x, y] != null) {
                     if (cells[x, y].GetComponent<SpriteRenderer>().color == Color.black&&!_roudCells.Contains(new Vector2Int(x,y))) {
-                        GameObject gO = Instantiate(PrefabTree, cells[x, y].transform.position, Quaternion.identity);
+                        GameObject gO = Instantiate(PrefabTree, cells[x, y].transform.position, Quaternion.identity,transform);
                         gO.transform.localScale = gO.transform.localScale * Random.Range(0.7f, 1.1f);
                         Destroy(cells[x,y]);
                         TreeMap[x, y] = true;

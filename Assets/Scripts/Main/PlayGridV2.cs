@@ -14,8 +14,10 @@ namespace Scripts.Main
         public float CellSize = 1;
         public Vector3 Origin;
         public Cell[,] Cells;
+        public GameObject PrefabBuildingCell;
 
-        [Header("Flow Field Calulation")] public Vector2Int originePos;
+        [Header("Flow Field Calulation")] 
+        public Vector2Int originePos;
 
         [Header("Debug")] 
         public bool ShowDebug;
@@ -41,11 +43,16 @@ namespace Scripts.Main
            for (int x = 0; x < Widht; x++) {
                for (int y = 0; y < Height; y++) {
                    Cells[x,y] = new Cell(new Vector2Int(x,y),0 , this);
-                   Cells[x, y].CellDebug = Instantiate(CellDebug, new Vector3(x + 0.5f, y + 0.5f,-0.05f ), quaternion.identity);
+                   //Cells[x, y].CellDebug = Instantiate(CellDebug, new Vector3(x + 0.5f, y + 0.5f,-0.05f ), quaternion.identity);
                    Cells[x, y].Iswall = waterMap[x, y];
                    if (waterMap[x, y])
                    {
                        Cells[x, y].IndividualMoveValue = 1000;
+                   }
+                   else
+                   {
+                       Cells[x,y].BuildingCell = Instantiate(PrefabBuildingCell, new Vector3(x + 0.5f, y + 0.5f,-0.05f ), quaternion.identity, transform);
+                       Cells[x,y].BuildingCell.SetActive(false);
                    }
                }
            }
@@ -194,6 +201,18 @@ namespace Scripts.Main
                    }
                }
            }
+       }
+
+       public void GeneratTerrainBorders()
+       {
+           GameObject Go = Instantiate(PrfabColider2D, new Vector3(Widht / 2f, -0.5f), quaternion.identity);
+           Go.transform.localScale = new Vector3(Widht + 2, 1, 1);
+           Go = Instantiate(PrfabColider2D, new Vector3(-0.5f, Height/2f), quaternion.identity);
+           Go.transform.localScale = new Vector3(1, Height+2, 1);
+           Go = Instantiate(PrfabColider2D, new Vector3(Widht +0.5f, Height/2f), quaternion.identity);
+           Go.transform.localScale = new Vector3(1, Height+2, 1);
+           Go = Instantiate(PrfabColider2D, new Vector3(Widht/2, Height+0.5f), quaternion.identity);
+           Go.transform.localScale = new Vector3(Widht + 2,1,  1);
        }
 
         public List<Vector2Int> GetNeigbor(Vector2Int pos)

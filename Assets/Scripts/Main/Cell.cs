@@ -12,6 +12,7 @@ namespace Scripts.Main
         public int IndividualMoveValue;
         public Vector3 FlowFieldOrientation;
         public Vector2 FlowField2DOrientation;
+        public GameObject BuildingCell;
         public CellDebug CellDebug;
         public bool Iswall;
         public PlayGrid Grid;
@@ -34,25 +35,25 @@ namespace Scripts.Main
         public void AddMoveValue(int value)
         {
             IndividualMoveValue += value;
-            CellDebug.ChangeMoveIndidualValue(IndividualMoveValue);
+            if(CellDebug!=null)CellDebug.ChangeMoveIndidualValue(IndividualMoveValue);
             if (Iswall)CellDebug.ActivateCollider();
         }
 
         public void SetMoveValue(int value)
         {
             MoveValue = value;
-            CellDebug.ChangeMoveValue(MoveValue);
+            if(CellDebug!=null)CellDebug.ChangeMoveValue(MoveValue);
         }
 
         public void SetFlowFieldVector(Vector3 vec)
         {
             FlowFieldOrientation = vec;
-            CellDebug.ChangeVector(FlowFieldOrientation);
+            if(CellDebug!=null)CellDebug.ChangeVector(FlowFieldOrientation);
         }
         public void SetFlowField2DVector(Vector2 vec)
         {
             FlowField2DOrientation = vec;
-            CellDebug.ChangeVector(FlowField2DOrientation);
+            if(CellDebug!=null)CellDebug.ChangeVector(FlowField2DOrientation);
         }
 
         public Vector2 Get2DVector() {
