@@ -12,7 +12,11 @@ public class TourelleFSM : MonoBehaviour
     public float ReloadTime;
     public CircleCollider2D CircleCollider2D;
     public LineRenderer LineRenderer;
-    
+    public GameObject OutLine;
+    [Header("PowerEffect")] 
+    public GameObject ZoneEffect;
+    public float ZoneSize;
+
     private List<MoveActorV2> enemisInRange=new List<MoveActorV2>();
     private float _timer;
     
@@ -49,19 +53,27 @@ public class TourelleFSM : MonoBehaviour
             _timer += Time.deltaTime;
         }
 
-        Debug.Log(enemisInRange.Count + " énémie dans la zone");
+        Debug.Log(enemisInRange.Count + " ennemie dans la zone");
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.GetComponent<MoveActorV2>() != null)
-        {
-            if (!enemisInRange.Contains(other.GetComponent<MoveActorV2>())) enemisInRange.Add( other.GetComponent<MoveActorV2>()); 
-        }
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.GetComponent<MoveActorV2>() != null) if (!enemisInRange.Contains(other.GetComponent<MoveActorV2>())) enemisInRange.Add( other.GetComponent<MoveActorV2>());
     }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
+    private void OnTriggerExit2D(Collider2D other) {
         if (other.GetComponent<MoveActorV2>() != null) if (enemisInRange.Contains(other.GetComponent<MoveActorV2>())) enemisInRange.Remove( other.GetComponent<MoveActorV2>()); 
+    }
+
+    public void OnSelect() {
+        OutLine.SetActive(true);
+    }
+
+    public void OnDeselect() {
+        OutLine.SetActive(false);
+    }
+
+    public void DoPower()
+    {
+        
     }
 }

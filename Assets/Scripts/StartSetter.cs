@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Scripts.Interaction;
 using Scripts.Main;
-
+using UnityEditor;
 using UnityEngine;
 
 public class StartSetter : MonoBehaviour
@@ -26,7 +26,8 @@ public class StartSetter : MonoBehaviour
         PlayGridV2.enabled = true;
         GridControllerV2.enabled = true;
         PlayGridV2.GeneratTerrainBorders();
-        
+        Application.targetFrameRate = 30;
+
         //StaticOcclusionCulling.Compute();
     }
 

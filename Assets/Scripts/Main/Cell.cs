@@ -18,6 +18,7 @@ namespace Scripts.Main
         public PlayGrid Grid;
         public PlayGridV2 GridV2;
         public float DradFactor = 1;
+        public TourelleFSM tourelle;
 
         public Cell(Vector2Int pos, int moveValue , PlayGrid grid)
         {

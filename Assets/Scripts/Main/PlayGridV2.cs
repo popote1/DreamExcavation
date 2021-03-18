@@ -142,10 +142,7 @@ namespace Scripts.Main
 
         public bool CheckCellIsWall(Vector2Int pos)
         {
-            if (CheckIsInGrid(pos)) {
-                return GetCell(pos).Iswall;
-                
-            }
+            if (CheckIsInGrid(pos))  return GetCell(pos).Iswall;
             return true;
         }
        IEnumerator CalculateFlowFieldCorutine()
@@ -197,7 +194,7 @@ namespace Scripts.Main
                    if ( Cells[x, y].Iswall)
                    {
                        Instantiate(PrfabColider2D, GetCellCenterWorldPosByCell(new Vector2Int(x, y)),
-                           quaternion.identity);
+                           quaternion.identity,transform);
                    }
                }
            }
@@ -205,13 +202,13 @@ namespace Scripts.Main
 
        public void GeneratTerrainBorders()
        {
-           GameObject Go = Instantiate(PrfabColider2D, new Vector3(Widht / 2f, -0.5f), quaternion.identity);
+           GameObject Go = Instantiate(PrfabColider2D, new Vector3(Widht / 2f, -0.5f), quaternion.identity,transform);
            Go.transform.localScale = new Vector3(Widht + 2, 1, 1);
-           Go = Instantiate(PrfabColider2D, new Vector3(-0.5f, Height/2f), quaternion.identity);
+           Go = Instantiate(PrfabColider2D, new Vector3(-0.5f, Height/2f), quaternion.identity,transform);
            Go.transform.localScale = new Vector3(1, Height+2, 1);
-           Go = Instantiate(PrfabColider2D, new Vector3(Widht +0.5f, Height/2f), quaternion.identity);
+           Go = Instantiate(PrfabColider2D, new Vector3(Widht +0.5f, Height/2f), quaternion.identity,transform);
            Go.transform.localScale = new Vector3(1, Height+2, 1);
-           Go = Instantiate(PrfabColider2D, new Vector3(Widht/2, Height+0.5f), quaternion.identity);
+           Go = Instantiate(PrfabColider2D, new Vector3(Widht/2, Height+0.5f), quaternion.identity,transform);
            Go.transform.localScale = new Vector3(Widht + 2,1,  1);
        }
 

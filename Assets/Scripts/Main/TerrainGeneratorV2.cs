@@ -217,7 +217,7 @@ void Start()
                     cells[x, y] = Instantiate(prefhabeCell,
                         new Vector3(x * cellSize, y * cellSize, 0.5f) + new Vector3(0.5f, 0.5f),
                         quaternion.identity);
-                    Instantiate(PrefabPont, new Vector3(x+0.5f, y+0.5f, 0.5f), Quaternion.identity);
+                    Instantiate(PrefabPont, new Vector3(x+0.5f, y+0.5f, 0.5f), Quaternion.identity,transform);
                     _roudCells.Add(new Vector2Int(x, y));
                 }
             }
