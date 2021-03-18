@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1566994944802870122}
   - component: {fileID: 1747221195126056325}
   - component: {fileID: 2719048641657559405}
-  - component: {fileID: 7630105465738861478}
+  - component: {fileID: 4212776502257049869}
   m_Layer: 0
   m_Name: MoveActorV2
   m_TagString: Untagged
@@ -120,8 +120,8 @@ MonoBehaviour:
   MaxSpeed: 10
   Acceleration: 5
   grid: {fileID: 0}
---- !u!58 &7630105465738861478
-CircleCollider2D:
+--- !u!61 &4212776502257049869
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -134,5 +134,15 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 0.50000006
+  m_Size: {x: 0.99999994, y: 0.99999994}
+  m_EdgeRadius: 0

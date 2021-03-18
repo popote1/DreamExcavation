@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Scripts.Interaction;
 using Scripts.Main;
+using UnityEditor;
 using UnityEngine;
 
 public class StartSetter : MonoBehaviour
@@ -11,9 +12,10 @@ public class StartSetter : MonoBehaviour
     public GridControllerV2 GridControllerV2; 
     void Start()
     {
-        TerrainGeneratorV2.GenerateMesh();
+        TerrainGeneratorV2.MakeNewMesh();
         TerrainGeneratorV2.GeneratePlaybleMap();
         TerrainGeneratorV2.GeneratRouds();
+        TerrainGeneratorV2.gameObject.isStatic = true;
         TerrainGeneratorV2.IsUsingTreeMidifier = true;
         TerrainGeneratorV2.IsUsingTreeMidifier = true;
         TerrainGeneratorV2.IsUsTreeTreashHosld = true;
@@ -22,6 +24,7 @@ public class StartSetter : MonoBehaviour
         PlayGridV2.GeneratWarterColiders();
         PlayGridV2.enabled = true;
         GridControllerV2.enabled = true;
+        StaticOcclusionCulling.Compute();
     }
 
     // Update is called once per frame

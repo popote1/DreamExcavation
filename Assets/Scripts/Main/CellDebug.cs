@@ -21,7 +21,7 @@ namespace Scripts.Main
 
         private void Update()
         {
-            Debug.DrawLine(transform.position , transform.position+flowFieldVecotr/2, Color.red);
+           // Debug.DrawLine(transform.position , transform.position+flowFieldVecotr/2, Color.red);
         }
 
         public void ChangeMoveIndidualValue(int newValue)
