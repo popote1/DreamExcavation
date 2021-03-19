@@ -24,6 +24,12 @@ namespace Scripts.Main
         public Color GridColor= Color.green;
         public CellDebug CellDebug;
         public GameObject[,] arrows;
+        public bool RefresfFlowField;
+        public float TimeBetweenFowlRefresh;
+        private bool _canUpdate;
+
+        private float _timer;
+        
 
         public GameObject PrfabColider2D;
        /* void Start()
@@ -84,9 +90,17 @@ namespace Scripts.Main
        }
         void Update()
         {
+            
+            if (_canUpdate && RefresfFlowField)
+            {
+                CalculateFlowField();
+                RefresfFlowField = false;
+            }
+            
+                
+            
             if (ShowDebug)
             {
-               
                 for (int x = 0; x < 1+Widht; x++) {
                     Debug.DrawLine(new Vector3(x,0,0),new Vector3(x,Height,0),GridColor);
                 }
@@ -124,6 +138,7 @@ namespace Scripts.Main
         public void CalculateFlowField() {
            // FlowFieldHelper.CalculatFlowField(this,originePos);
            StartCoroutine(CalculateFlowFieldCorutine());
+           _canUpdate = false;
         }
 
         public List<Vector2Int> GetNeibors(Vector2Int pos)
@@ -183,6 +198,8 @@ namespace Scripts.Main
                 temporalToAdd.Clear();
                 yield return new WaitForSeconds(0.01f);
             }
+
+            _canUpdate = true;
             yield return null;
         }
 

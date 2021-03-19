@@ -13,12 +13,20 @@ public class TourelleFSM : MonoBehaviour
     public CircleCollider2D CircleCollider2D;
     public LineRenderer LineRenderer;
     public GameObject OutLine;
+    public AudioSource AudioSource;
     [Header("PowerEffect")] 
     public GameObject ZoneEffect;
     public float ZoneSize;
+    public GameObject PowerEffect;
+    public float EffectTime;
+    public float DestructionRange;
+    public float AddForceRange;
+    public float AddForcePower;
 
+    
     private List<MoveActorV2> enemisInRange=new List<MoveActorV2>();
     private float _timer;
+    private float _powereffectTimer;
     
     void Start()
     {
@@ -39,6 +47,7 @@ public class TourelleFSM : MonoBehaviour
                 LineRenderer.enabled = true;
                 LineRenderer.SetPosition(1,enemisInRange[0].transform.position);
                 _timer = 0;
+                AudioSource.Play();
                 Destroy(enemisInRange[0].gameObject);
             }
         }
@@ -53,7 +62,14 @@ public class TourelleFSM : MonoBehaviour
             _timer += Time.deltaTime;
         }
 
-        Debug.Log(enemisInRange.Count + " ennemie dans la zone");
+        if (PowerEffect.activeSelf) {
+            _powereffectTimer += Time.deltaTime;
+            if (_powereffectTimer >= EffectTime) {
+                _powereffectTimer = 0;
+                PowerEffect.SetActive(false);
+            }
+        }
+
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
@@ -72,8 +88,26 @@ public class TourelleFSM : MonoBehaviour
         OutLine.SetActive(false);
     }
 
-    public void DoPower()
+    public void DoPower(Vector2 origine)
     {
-        
+        PowerEffect.transform.position = origine;
+        PowerEffect.SetActive(true);
+        Collider2D[] affectd = new Collider2D[50];
+        Physics2D.OverlapCircle(origine, DestructionRange,new ContactFilter2D().NoFilter(),affectd);
+        foreach (Collider2D coll in affectd){
+            if (coll != null) {
+                if (coll.transform.CompareTag("MoveActor")||coll.transform.CompareTag("Tree")) {
+                    Destroy(coll.gameObject);
+                }
+            }
+        }
+        Physics2D.OverlapCircle(origine, AddForceRange,new ContactFilter2D().NoFilter(),affectd);
+        foreach (Collider2D coll in affectd){
+            if (coll != null) {
+                if (coll.transform.CompareTag("MoveActor")) {
+                    coll.GetComponent<Rigidbody2D>().AddForce((new Vector2(coll.transform.position.x,coll.transform.position.y)-origine).normalized*AddForcePower,ForceMode2D.Impulse);
+                }
+            }
+        }
     }
 }

@@ -290,6 +290,8 @@ void Start()
                     if (cells[x, y].GetComponent<SpriteRenderer>().color == Color.black&&!_roudCells.Contains(new Vector2Int(x,y))) {
                         GameObject gO = Instantiate(PrefabTree, cells[x, y].transform.position, Quaternion.identity,transform);
                         gO.transform.localScale = gO.transform.localScale * Random.Range(0.7f, 1.1f);
+                        gO.GetComponent<TreeScripte>().grid = playgrid;
+                        gO.GetComponent<TreeScripte>().pos = new Vector2Int(x, y);
                         Destroy(cells[x,y]);
                         TreeMap[x, y] = true;
                     }
