@@ -23,12 +23,12 @@ namespace Scripts.Interaction
             get => _inputState;
             set
             {
-                if (_inputState == inputState.building)
+                if (_inputState == inputState.buildingPress)
                 {
                     foreach (Vector2Int vec in _preselectedCell) Grid.GetCell(vec).BuildingCell.SetActive(false);
                     _preselectedCell.Clear();
                 }
-
+                if (_inputState == inputState.UsPowerPress)Destroy(_powerCursor);
                 _inputState = value;
             }
         }
@@ -44,6 +44,8 @@ namespace Scripts.Interaction
         private List<Vector2Int> _preselectedCell = new List<Vector2Int>();
         private TourelleFSM _selectedTourelle;
         private GameObject _powerCursor;
+        private List<Vector2Int> selected = new List<Vector2Int>();
+        private List<Vector2Int> tepo = new List<Vector2Int>();
 
         public enum inputState
         {
@@ -51,7 +53,9 @@ namespace Scripts.Interaction
             Actor,
             Destination,
             building,
-            UsPower
+            buildingPress,
+            UsPower,
+            UsPowerPress
         }
 
         private void Awake() {
@@ -68,6 +72,30 @@ namespace Scripts.Interaction
                 if (selectedCellT != new Vector2Int(-1, -1)) {
                     selectedCell = selectedCellT;
                     _cursorPos = Grid.GetCellCenterWorldPosByCell(selectedCell);
+
+                    if (Input.GetButtonUp("Fire1"))
+                    {
+                        if (_inputState == inputState.buildingPress)
+                        {
+                            if (selected.Count == 4)
+                            {
+                                buid(selected);
+                            }
+                            InputState = inputState.none; 
+                        }
+                        if (_inputState == inputState.UsPowerPress)
+                        {
+                            _selectedTourelle.DoPower(hit.point);
+                            InputState = inputState.none;
+                        }
+                    }
+
+                    if (Input.GetButtonDown("Fire1"))
+                    {
+                        if (_inputState == inputState.building) _inputState = inputState.buildingPress;
+                        if (_inputState == inputState.UsPower) _inputState = inputState.UsPowerPress;
+                    }
+                    
                     if (Input.GetButton("Fire1") && !IsOnUI) {
                         //Grid.Cells[selectedCell.x,selectedCell.y].AddMoveValue(10);
                         if (InputState == inputState.Actor) {
@@ -100,32 +128,17 @@ namespace Scripts.Interaction
                         }
                     }
 
-                    if (InputState == inputState.building)
+                    if (InputState == inputState.buildingPress)
                     {
-                        List<Vector2Int> selected=GetBuildingVec2by2(selectedCell);
-                        List<Vector2Int> tepo = new List<Vector2Int>();
+                         selected=GetBuildingVec2by2(selectedCell);
+                         tepo = new List<Vector2Int>();
                         foreach (Vector2Int cell in _preselectedCell) {
                             if (!selected.Contains(cell)) {
                                 Grid.GetCell(cell).BuildingCell.SetActive(false);
                                 tepo.Add(cell);
                             }
                         }
-
                         foreach (Vector2Int vec in tepo) _preselectedCell.Remove(vec);
-                        if (Input.GetButtonUp("Fire1")&&selected.Count==4) {
-                            buid(selected);
-                            InputState = inputState.none;
-                        }
-                    }
-
-                    if (InputState == inputState.UsPower)
-                    {
-                        if (Input.GetButtonUp("Fire1"))
-                        {
-                            _selectedTourelle.DoPower();
-                            Destroy(_powerCursor);
-                            InputState = inputState.none;
-                        }
                     }
                 }
             }
@@ -135,11 +148,6 @@ namespace Scripts.Interaction
             if(_powerCursor!=null)_powerCursor.transform.position = hit.point;
         }
 
-        public void UIPressButtonPower()
-        {
-            
-        }
-
         public void SetInputStateOnAdd() { InputState = inputState.Actor; }
         public void SetInputStateOnDestination() { InputState = inputState.Destination; }
         public void SetInputStateOnNone() { InputState = inputState.none; }
@@ -147,6 +155,7 @@ namespace Scripts.Interaction
 
         public void SetInputStatOnActivatePower()
         {
+            Debug.Log("creer le cursor de pouvoir");
             InputState = inputState.UsPower;
             _powerCursor =Instantiate(_selectedTourelle.ZoneEffect, Vector3.zero, quaternion.identity);
             _powerCursor.transform.localScale = Vector3.one*_selectedTourelle.ZoneSize;

@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 1747221195126056325}
   - component: {fileID: 2719048641657559405}
   - component: {fileID: 4807517612342559758}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MoveActorV2
-  m_TagString: Untagged
+  m_TagString: MoveActor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
