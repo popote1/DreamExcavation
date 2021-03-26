@@ -6,6 +6,7 @@ TagManager:
   tags:
   - MoveActor
   - Tree
+  - PlayGrid
   layers:
   - Default
   - TransparentFX
