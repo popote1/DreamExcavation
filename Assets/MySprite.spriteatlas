@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MySprite
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 1
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 1024
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: b19eb63400202e043abbc7fc5d176e00, type: 3}
+    totalSpriteSurfaceArea: 12582912
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: f6182100785b1ef4da300333103001cc, type: 3}
+  - {fileID: 21300000, guid: c9f31480bc00cc140a1e7fb0ef62ae3d, type: 3}
+  - {fileID: 21300000, guid: ac62ca2340b5deb47b3be6484daf5d1d, type: 3}
+  - {fileID: 21300000, guid: 9dbf48c33e2bec04a9f678b14ea61568, type: 3}
+  - {fileID: 21300000, guid: 345e8045ef98c054ab74b870bf12e03f, type: 3}
+  - {fileID: 21300000, guid: 4d832ed553633f44396d462fcda9bee3, type: 3}
+  - {fileID: 21300000, guid: e97b6b97e19b066428548ed1ee515837, type: 3}
+  - {fileID: 21300000, guid: 4e477e089423f3c4a95be14996632042, type: 3}
+  - {fileID: 21300000, guid: 1132dbf8923d9ba42b0720703dcd134d, type: 3}
+  - {fileID: 21300000, guid: c31281c99ad75f54ab8a72f3f937fda7, type: 3}
+  - {fileID: 21300000, guid: c140241ddccf08f42bd131fabe5ca3ea, type: 3}
+  - {fileID: 21300000, guid: 4af36a8d73844454ca867dd0e48151ea, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - pose 1
+  - Deathpose 2
+  - Deathpose 3
+  - Deathpose 4
+  - pose 4
+  - ORC_ATTACK_1
+  - ORC_ATTACK_3
+  - ORC_ATTACK_4
+  - pose 2
+  - ORC_ATTACK_2
+  - Deathpose 1
+  - pose 3
+  m_RenderDataMap: {}
+  m_Tag: MySprite
+  m_IsVariant: 0

@@ -4101,9 +4101,5 @@ PrefabInstance:
       propertyPath: m_Name
       value: basicTower
       objectReference: {fileID: 0}
-    - target: {fileID: 7587766764414387936, guid: 502c7c7e7a602ce468bd74ad37d65df8, type: 3}
-      propertyPath: m_UseWorldSpace
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 502c7c7e7a602ce468bd74ad37d65df8, type: 3}

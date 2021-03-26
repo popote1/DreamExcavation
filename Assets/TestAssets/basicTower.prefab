@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 590259762258691545}
   m_Layer: 0
   m_Name: basicTower
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -196,7 +196,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4051653470505643520}
-  m_LocalRotation: {x: -1, y: -0, z: -0, w: 0.00000016391276}
+  m_LocalRotation: {x: -1, y: 0, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -207,7 +207,7 @@ Transform:
   - {fileID: 862281323123488519}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -180, y: 0, z: 0}
 --- !u!61 &6815689350178101439
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -371,7 +371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RangeRadiaus: 5
   LazerLiveTime: 0.2
-  ReloadTime: 0.3
+  ReloadTime: 1
   CircleCollider2D: {fileID: 4628152722939624086}
   LineRenderer: {fileID: 7587766764414387936}
   OutLine: {fileID: 3563357598265500167}
